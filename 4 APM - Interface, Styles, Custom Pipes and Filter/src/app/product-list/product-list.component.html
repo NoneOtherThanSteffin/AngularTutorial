@@ -1,0 +1,84 @@
+<div class='card'>
+
+  <div class='card-header' align="left">
+    <!-- This is Interpolation. Used to assign values from typescript to HTML. -->
+    <!-- If value in typescript changes, then new value is reflected in HTML. -->
+    {{pageTitle}}
+  </div>
+
+  <div class='card-body'>
+
+    <div class='row'>
+      <div class='col-md-2'>Filter By</div>
+      <div class='col-md-3'>
+        <!-- () Event binding from HTML to TypeScript. [] values goes from HTML to TypeScript. -->
+        <!-- ngModel registers the event and changes the TypeScript property specified on the right. In this case "listFilter" -->
+        <input type='text' [(ngModel)]='listFilter'>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-md-2'>
+        <h6>Filtered by: {{listFilter}}</h6>
+      </div>
+    </div>
+
+    <div class='table-responsive' class="text-left">
+      <!-- *ngIf is used to assert some condition upon which the element and its inner elements are shown/hidden -->
+      <table class='table'
+             *ngIf='products.length>0'>
+        <thead>
+        <tr>
+          <th>
+            <!-- Button on click method is invoked -->
+            <button class='btn btn-primary' (click)='buttonShowHideImage()'>
+              <!-- Interpolation with javascript condition -->
+              {{showImage ? 'Hide Image' : 'Show Image'}}
+            </button>
+          </th>
+          <th>Product</th>
+          <th>Code</th>
+          <th>Available</th>
+          <th>Price</th>
+          <th>5 Star Rating</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- *ngFor is used to iterate through all the product. Just like enhanced for loop in Java -->
+        <tr *ngFor='let product of filteredProducts'>
+          <th>
+            <!-- Show/Hide Image when button is clicked [*ngIf condition checks it] -->
+            <!-- Image Src,Title,Width,Height,Margin are properties -->
+            <!-- We can assign these properties through interpolation -->
+            <!-- Interpolation can be done in 2 ways -->
+            <!-- a. using {{}} -->
+            <!-- b. using [] Property Binding-->
+            <!-- [] Used when we want to use pipe with tag properties. In this case title is a property of the image tag -->
+            <img src={{product.imageUrl}} [title]='product.productName | lowercase'
+                 style.width.px={{imageWidth}} style.height.px={{imageWidth}}
+                 style.margin.px={{imageMargin}}
+                 *ngIf='showImage'>
+          </th>
+          <th>{{product.productName}}</th>
+          <!-- | This is a pipe used to convert the left hand side value to lowercase/uppercase -->
+          <!-- There are several Angular defined pipes [Including lowercase/uppercase]. We can also create our own pipes -->
+          <!-- convertToSpaces pipe is user defined. We need to register the pipe in AppModule to use it -->
+          <!-- Pipe chaining  -->
+          <th>{{product.productCode | lowercase | convertToSpaces:'-'}}</th>
+          <th>{{product.releaseDate}}</th>
+          <!-- Currency pipe has its own attributes currency:'type':'symbol':'minimumDigitToLeft.MinimumDigitToRight-MaximumDigitToRght' -->
+          <!-- In This case -->
+          <!-- Curreny Type = USD -->
+          <!-- Symbol = $ -->
+          <!-- Minimum 1 digit to left of decimal -->
+          <!-- Minimum 2 digits to right of decimal -->
+          <!-- Maximum 3 digits to right to decimal -->
+          <th>{{product.price | currency:'INR':'₹':'1.2-3'}}</th>
+          <th>{{product.starRating}}</th>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
